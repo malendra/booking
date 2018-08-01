@@ -22,11 +22,24 @@ namespace AppointmentBusiness.Test
             UserDto blueUser = new UserDto { Id ="1", Contact = "098", Name = blue };
             UserDto greenUser = new UserDto { Id = "2" , Contact = "021", Name = green };
 
-            AppointmentDto appointment10AM = new AppointmentDto { Id = "1", Date = DateTime.Today, Time = new TimeSpan(10, 00, 00).ToString() };
-            AppointmentDto appointment10_30AM = new AppointmentDto { Id = "1", Date = DateTime.Today, Time = new TimeSpan(10, 30, 00).ToString() };
+            AppointmentDto appointment10Am = new AppointmentDto { Id = "1", Date = DateTime.Today, Time = new TimeSpan(10, 00, 00).ToString() };
+            AppointmentDto appointment1030Am = new AppointmentDto { Id = "1", Date = DateTime.Today, Time = new TimeSpan(10, 30, 00).ToString() };
 
-            UserAppointmentDto userAppointmentDto1 = new UserAppointmentDto { Id = "1", AppointmentId = "1", UserId = "1", Notes = mockNoteUser1 };
-            UserAppointmentDto userAppointmentDto2 = new UserAppointmentDto { Id = "2", AppointmentId = "2", UserId = "2", Notes = mockNoteUser2 };
+            UserAppointmentDto userAppointmentDto1 = new UserAppointmentDto();
+            userAppointmentDto1.Id = "1";
+            userAppointmentDto1.AppointmentId = "1";
+            userAppointmentDto1.UserId = "1";
+            userAppointmentDto1.Notes = mockNoteUser1;
+            userAppointmentDto1.Appointment = appointment10Am;
+            userAppointmentDto1.User = blueUser;
+
+            UserAppointmentDto userAppointmentDto2 = new UserAppointmentDto();
+            userAppointmentDto2.Id = "2";
+            userAppointmentDto2.AppointmentId = "2";
+            userAppointmentDto2.UserId = "2";
+            userAppointmentDto2.Notes = mockNoteUser2;
+            userAppointmentDto2.Appointment = appointment1030Am;
+            userAppointmentDto2.User = greenUser;
 
             List<UserAppointmentDto> appointmentDtos = new List<UserAppointmentDto> { userAppointmentDto1, userAppointmentDto2 };
             mockRepository.Setup(m => m.GetAllAppointments(It.IsAny<DateTime>())).Returns(appointmentDtos);
@@ -34,8 +47,8 @@ namespace AppointmentBusiness.Test
             AppointmentModel appointmentModel = bookingManager.GetAllBookings(DateTime.Now);
 
             appointmentModel.AppointmentList.Count().Should().Be(2);
-            appointmentModel.AppointmentList.Where(a => a.User.Name == blue).Single().Notes.Should().Be(mockNoteUser1);
-            appointmentModel.AppointmentList.Where(a => a.User.Name == blue).Single().Notes.Should().Be(mockNoteUser1);
+            appointmentModel.AppointmentList.Single(a => a.User.Name == blue).Notes.Should().Be(mockNoteUser1);
+            appointmentModel.AppointmentList.Single(a => a.User.Name == blue).Notes.Should().Be(mockNoteUser1);
         }
     }
 }
